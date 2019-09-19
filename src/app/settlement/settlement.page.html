@@ -1,0 +1,36 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            Podsumowanie
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                Kto?
+            </ion-col>
+            <ion-col>
+                Komu?
+            </ion-col>
+            <ion-col>
+                Ile jest winny?
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of settlementArray">
+            <ion-col *ngIf="item.howMany > 0">
+                {{item.whoBorrowed}}
+            </ion-col>
+            <ion-col *ngIf="item.howMany > 0">
+                {{item.fromWhomBorrowed}}
+            </ion-col>
+            <ion-col *ngIf="item.howMany > 0">
+                {{item.howMany}}
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

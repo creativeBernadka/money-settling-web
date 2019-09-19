@@ -1,0 +1,40 @@
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-label>Kto płacił?</ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label>Dla kogo?</ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-label>Ile?</ion-label>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-select cancelText="Anuluj" okText="Ok" [(ngModel)]="settlingModel.whoPayed">
+                    <ion-select-option
+                            *ngFor=" let option of selectOptions"
+                            value="{{option.nick}}"
+                    >
+                        {{option.nick}}
+                    </ion-select-option>
+                </ion-select>
+            </ion-col>
+            <ion-col>
+                <ion-select multiple="true" cancelText="Anuluj" okText="Ok" [(ngModel)]="settlingModel.forWhom">
+                    <ion-select-option
+                            *ngFor=" let option of selectOptions"
+                            value="{{option.nick}}"
+                    >
+                        {{option.nick}}
+                    </ion-select-option>
+                </ion-select>
+            </ion-col>
+            <ion-col>
+                <ion-input placeholder="0" [(ngModel)]="settlingModel.howMany"></ion-input>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

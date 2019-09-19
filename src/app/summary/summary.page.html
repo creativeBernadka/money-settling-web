@@ -1,0 +1,50 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            Kto, komu, ile?
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content id="main-div">
+
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+                <ion-label>Ilość osób</ion-label>
+            </ion-col>
+            <ion-col>
+                <ion-input placeholder="0" [(ngModel)]="numberOfPeople"></ion-input>
+            </ion-col>
+            <ion-col>
+                <ion-button (click)="generateInputs()">Dodaj nicki</ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-list *ngIf="generateNickInput">
+        <ion-label>Podaj nicki:</ion-label>
+        <ion-input
+                *ngFor="let number of peopleArray"
+                placeholder="Nick {{number.nick}}"
+                [(ngModel)]="number.nick"
+        ></ion-input>
+    </ion-list>
+
+    <enter-value
+            *ngFor="let model of settlingModelArray"
+            [selectOptions]="peopleArray"
+            [settlingModel]="model"
+    ></enter-value>
+
+    <ion-fab>
+        <ion-fab-button (click)="addSettlingModel()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button (click)="calculateValues()">
+            <ion-icon name="checkmark"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+
+</ion-content>
