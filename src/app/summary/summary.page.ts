@@ -21,6 +21,7 @@ export class SummaryPage {
         private graphqlService: GraphqlService
     ) {}
 
+    name: string;
     numberOfPeople: string;
     peopleArray: Array<PersonModel> = [];
     generateNickInput = false;
@@ -82,7 +83,7 @@ export class SummaryPage {
         };
 
         const historyElement = new HistoryItemModel();
-        historyElement.name = 'wycieczka web10';
+        historyElement.name = this.name;
         historyElement.nickNames =
             this.peopleArray.map(
                 person => person.nick
