@@ -39,6 +39,21 @@ export class SummaryPage {
         this.settlingModelArray.push(new SettlingModel());
     }
 
+    goToSummary() {
+
+        this.calculateValues();
+
+        this.saveToDB();
+
+        const navigationExtras: NavigationExtras = {
+            state: {
+                data: this.borrowersArray
+            }
+        };
+
+        this.router.navigateByUrl('/settlement', navigationExtras);
+    }
+
     calculateValues() {
         this.settlingModelArray.forEach(
             settlingModel => {
@@ -76,12 +91,9 @@ export class SummaryPage {
         );
 
         this.borrowersArray = helperBorrowerArray;
-        const navigationExtras: NavigationExtras = {
-            state: {
-                data: helperBorrowerArray
-            }
-        };
+    }
 
+    saveToDB() {
         const historyElement = new HistoryItemModel();
         historyElement.name = this.name;
         historyElement.nickNames =
@@ -111,8 +123,6 @@ export class SummaryPage {
             }, (error) => {
                 console.log('there was an error sending the query', error);
             });
-
-        this.router.navigateByUrl('/settlement', navigationExtras);
     }
 
 }
