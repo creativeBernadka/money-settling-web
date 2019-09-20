@@ -8,8 +8,10 @@
 
 <ion-content>
 
-  <pre>
-    {{data | json}}
-  </pre>
+  <history-item
+          *ngFor="let element of history"
+          [historyElement]="element"
+  >
+  </history-item>
 
 </ion-content>

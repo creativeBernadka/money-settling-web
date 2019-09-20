@@ -12,7 +12,7 @@ export class HomePage implements OnInit {
 
   constructor(private apollo: Apollo) {}
 
-  data = {};
+  history = [];
 
   ngOnInit() {
     this.apollo
@@ -23,16 +23,13 @@ export class HomePage implements OnInit {
               id
               name
               nickNames
-              payments{
-                whoPayed
-              }
             }
           }
         `,
         })
         .valueChanges.subscribe(result => {
-          console.log(result.data);
-          this.data = result.data;
+          console.log(result.data.history);
+          this.history = result.data.history;
     });
   }
 

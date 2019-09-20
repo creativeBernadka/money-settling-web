@@ -5,11 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
+import {HistoryItemModule} from '../history-item/history-item.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    HistoryItemModule,
     IonicModule,
     RouterModule.forChild([
       {

@@ -4,9 +4,7 @@ import {SettlingModel} from '../../models/settlingModel';
 import {ResultsModel} from '../../models/resultsModel';
 import {GraphqlService} from '../../services/graphql.service';
 import {NavigationExtras, Router} from '@angular/router';
-import {graphql} from 'graphql';
 import {HistoryItemModel} from '../../models/historyItemModel';
-import {element} from 'protractor';
 
 @Component({
     selector: 'summary',
