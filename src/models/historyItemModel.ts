@@ -1,14 +1,16 @@
+import {PersonModel} from './personModel';
+
 export class HistoryItemModel {
     name: string;
     nickNames: Array<string>;
     payments: Array<{
-        whoPayed: string,
-        forWhom: Array<string>,
+        whoPayed: PersonModel,
+        forWhom: Array<PersonModel>,
         howMany: number
     }>;
     summary: Array<{
-        whoPays: string,
-        whomPays: string,
+        whoPays: PersonModel,
+        whomPays: PersonModel,
         howMany: number
     }>;
 }

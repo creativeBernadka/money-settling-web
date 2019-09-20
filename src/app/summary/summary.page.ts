@@ -89,14 +89,20 @@ export class SummaryPage {
             );
         historyElement.payments =
             this.settlingModelArray.map( payment => {
-                console.log('payment', payment);
                 return {
-                    whoPayed: 'sadasd', // payment.whoPayed,
-                    forWhom: ['sad', 'dsasa'], // payment.forWhom,
+                    whoPayed: payment.whoPayed,
+                    forWhom: payment.forWhom,
+                    howMany: parseFloat(String(payment.howMany))
+                };
+            });
+        historyElement.summary =
+            this.borrowersArray.map( payment => {
+                return {
+                    whoPays: payment.whoBorrowed,
+                    whomPays: payment.fromWhomBorrowed,
                     howMany: payment.howMany
                 };
             });
-        // historyElement.summary = this.borrowersArray;
 
         this.graphqlService.insertHistoryItem(historyElement)
             .subscribe(({ data }) => {
