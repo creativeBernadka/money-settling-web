@@ -1,10 +1,13 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PersonModel} from '../../models/personModel';
 import {SettlingModel} from '../../models/settlingModel';
 import {ResultsModel} from '../../models/resultsModel';
 import {GraphqlService} from '../../services/graphql.service';
-import {NavigationExtras, Router} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {HistoryItemModel} from '../../models/historyItemModel';
+import {Apollo} from 'apollo-angular';
+import gql from 'graphql-tag';
+import {map} from 'rxjs/operators';
 
 @Component({
     selector: 'summary',
@@ -12,11 +15,12 @@ import {HistoryItemModel} from '../../models/historyItemModel';
     styleUrls: ['summary.page.scss'],
     providers: [GraphqlService]
 })
-export class SummaryPage {
+export class SummaryPage implements OnInit{
 
     constructor(
         private router: Router,
-        private graphqlService: GraphqlService
+        private graphqlService: GraphqlService,
+        private activatedRoute: ActivatedRoute
     ) {}
 
     name: string;
@@ -25,6 +29,32 @@ export class SummaryPage {
     generateNickInput = false;
     settlingModelArray: Array<SettlingModel> = [];
     borrowersArray: Array<ResultsModel> = [];
+    private historyElement = new HistoryItemModel();
+
+    ngOnInit(): void {
+        this.activatedRoute.paramMap
+            .pipe(map(() => window.history.state))
+            .subscribe( results => {
+                if (results.data) {
+                    this.historyElement.id = results.data;
+                    this.graphqlService.getHistoryItem(results.data)
+                        .subscribe(result => {
+                            this.name = result.data.historyItem.name;
+                            this.numberOfPeople = result.data.historyItem.nickNames.length;
+                            this.generateInputs();
+                            this.peopleArray.forEach( (person, index) => {
+                                person.nick = result.data.historyItem.nickNames[index];
+                            });
+                            result.data.historyItem.payments.forEach( (payment, index) => {
+                               this.addSettlingModel();
+                               this.settlingModelArray[index].whoPayed = payment.whoPayed;
+                               this.settlingModelArray[index].forWhom = payment.forWhom;
+                               this.settlingModelArray[index].howMany = payment.howMany;
+                            });
+                        });
+                }
+            });
+    }
 
     generateInputs() {
         this.settlingModelArray.length = 0;
@@ -92,13 +122,12 @@ export class SummaryPage {
     }
 
     saveToDB() {
-        const historyElement = new HistoryItemModel();
-        historyElement.name = this.name;
-        historyElement.nickNames =
+        this.historyElement.name = this.name;
+        this.historyElement.nickNames =
             this.peopleArray.map(
                 person => person.nick
             );
-        historyElement.payments =
+        this.historyElement.payments =
             this.settlingModelArray.map( payment => {
                 return {
                     whoPayed: payment.whoPayed,
@@ -106,7 +135,7 @@ export class SummaryPage {
                     howMany: parseFloat(String(payment.howMany))
                 };
             });
-        historyElement.summary =
+        this.historyElement.summary =
             this.borrowersArray.map( payment => {
                 return {
                     whoPays: payment.whoBorrowed,
@@ -115,7 +144,7 @@ export class SummaryPage {
                 };
             });
 
-        this.graphqlService.insertHistoryItem(historyElement)
+        this.graphqlService.insertHistoryItem(this.historyElement)
             .subscribe(({ data }) => {
                 console.log('got data', data);
             }, (error) => {

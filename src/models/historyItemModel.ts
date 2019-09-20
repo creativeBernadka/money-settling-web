@@ -1,6 +1,7 @@
 import {PersonModel} from './personModel';
 
 export class HistoryItemModel {
+    id: string;
     name: string;
     nickNames: Array<string>;
     payments: Array<{

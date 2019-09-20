@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
+import {NavigationExtras, Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,10 @@ import gql from 'graphql-tag';
 })
 export class HomePage implements OnInit {
 
-  constructor(private apollo: Apollo) {}
+  constructor(
+      private apollo: Apollo,
+      private router: Router
+  ) {}
 
   history = [];
 
@@ -28,9 +32,21 @@ export class HomePage implements OnInit {
         `,
         })
         .valueChanges.subscribe(result => {
-          console.log(result.data.history);
           this.history = result.data.history;
     });
+  }
+
+  onItemSelected(id) {
+
+    const navigationExtras: NavigationExtras = {
+      state: {
+        data: id
+      }
+    };
+
+    console.log('id', id);
+
+    this.router.navigateByUrl('/summary', navigationExtras);
   }
 
 }

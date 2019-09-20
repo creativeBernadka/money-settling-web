@@ -15,6 +15,21 @@ export class GraphqlService {
         }
     `;
 
+    queryGetHistoryItem = gql`
+          query getHistoryItem($id: ID!){
+            historyItem(id: $id){
+              id
+              name
+              nickNames
+              payments {
+                whoPayed
+                forWhom
+                howMany
+              }
+            }
+          }
+        `;
+
     constructor(private apollo: Apollo) {}
 
     insertHistoryItem(historyItem: HistoryItemModel) {
@@ -25,5 +40,14 @@ export class GraphqlService {
                 historyElement: historyItem
             }
         });
+    }
+
+    getHistoryItem(id: string) {
+        return this.apollo.watchQuery({
+            query: this.queryGetHistoryItem,
+            variables: {
+                 id
+            }
+        }).valueChanges;
     }
 }

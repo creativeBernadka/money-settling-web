@@ -11,6 +11,7 @@
   <history-item
           *ngFor="let element of history"
           [historyElement]="element"
+          (click)="onItemSelected(element.id)"
   >
   </history-item>
 
