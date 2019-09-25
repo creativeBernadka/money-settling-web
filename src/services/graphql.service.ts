@@ -6,12 +6,21 @@ import {HistoryItemModel} from '../models/historyItemModel';
 
 @Injectable()
 export class GraphqlService {
-    mutation = gql`
+    mutationInsertHistoryItem = gql`
         mutation insertHistoryItem($historyElement: HistoryElementInput) {
           insertHistoryItem(historyElement: $historyElement) {
             id
             name
           }
+        }
+    `;
+
+    mutationUpdateHistoryItem = gql`
+        mutation updateHistoryItem($id: ID!, $historyElement: HistoryElementInput) {
+            updateHistoryItem(id: $id, historyElement: $historyElement) {
+                id
+                name
+            }
         }
     `;
 
@@ -33,10 +42,19 @@ export class GraphqlService {
     constructor(private apollo: Apollo) {}
 
     insertHistoryItem(historyItem: HistoryItemModel) {
-        console.log('mutation', historyItem);
         return this.apollo.mutate({
-            mutation: this.mutation,
+            mutation: this.mutationInsertHistoryItem,
             variables: {
+                historyElement: historyItem
+            }
+        });
+    }
+
+    updateHistoryItem(id: string, historyItem: HistoryItemModel) {
+        return this.apollo.mutate({
+            mutation: this.mutationUpdateHistoryItem,
+            variables: {
+                id,
                 historyElement: historyItem
             }
         });

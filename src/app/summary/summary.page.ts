@@ -15,7 +15,7 @@ import {map} from 'rxjs/operators';
     styleUrls: ['summary.page.scss'],
     providers: [GraphqlService]
 })
-export class SummaryPage implements OnInit{
+export class SummaryPage implements OnInit {
 
     constructor(
         private router: Router,
@@ -29,34 +29,38 @@ export class SummaryPage implements OnInit{
     generateNickInput = false;
     settlingModelArray: Array<SettlingModel> = [];
     borrowersArray: Array<ResultsModel> = [];
-    private historyElement = new HistoryItemModel();
+    id: string;
 
     ngOnInit(): void {
         this.activatedRoute.paramMap
             .pipe(map(() => window.history.state))
             .subscribe( results => {
                 if (results.data) {
-                    this.historyElement.id = results.data;
+                    this.id = results.data;
                     this.graphqlService.getHistoryItem(results.data)
                         .subscribe(result => {
-                            this.name = result.data.historyItem.name;
-                            this.numberOfPeople = result.data.historyItem.nickNames.length;
-                            this.generateInputs();
-                            this.peopleArray.forEach( (person, index) => {
-                                person.nick = result.data.historyItem.nickNames[index];
-                            });
-                            result.data.historyItem.payments.forEach( (payment, index) => {
-                               this.addSettlingModel();
-                               this.settlingModelArray[index].whoPayed = payment.whoPayed;
-                               this.settlingModelArray[index].forWhom = payment.forWhom;
-                               this.settlingModelArray[index].howMany = payment.howMany;
-                            });
+                            this.fillForm(result.data.historyItem);
                         });
                 }
             });
     }
 
-    generateInputs() {
+    fillForm(historyItem) {
+        this.name = historyItem.name;
+        this.numberOfPeople = historyItem.nickNames.length;
+        this.generateNickInputs();
+        this.peopleArray.forEach( (person, index) => {
+            person.nick = historyItem.nickNames[index];
+        });
+        historyItem.payments.forEach( (payment, index) => {
+            this.addSettlingModel();
+            this.settlingModelArray[index].whoPayed = payment.whoPayed;
+            this.settlingModelArray[index].forWhom = payment.forWhom;
+            this.settlingModelArray[index].howMany = payment.howMany;
+        });
+    }
+
+    generateNickInputs() {
         this.settlingModelArray.length = 0;
         const amount = parseInt(this.numberOfPeople, 10);
         this.peopleArray = Array.apply(null, Array(amount)).map(item => new PersonModel());
@@ -122,12 +126,13 @@ export class SummaryPage implements OnInit{
     }
 
     saveToDB() {
-        this.historyElement.name = this.name;
-        this.historyElement.nickNames =
+        const historyElement = new HistoryItemModel();
+        historyElement.name = this.name;
+        historyElement.nickNames =
             this.peopleArray.map(
                 person => person.nick
             );
-        this.historyElement.payments =
+        historyElement.payments =
             this.settlingModelArray.map( payment => {
                 return {
                     whoPayed: payment.whoPayed,
@@ -135,7 +140,7 @@ export class SummaryPage implements OnInit{
                     howMany: parseFloat(String(payment.howMany))
                 };
             });
-        this.historyElement.summary =
+        historyElement.summary =
             this.borrowersArray.map( payment => {
                 return {
                     whoPays: payment.whoBorrowed,
@@ -144,12 +149,22 @@ export class SummaryPage implements OnInit{
                 };
             });
 
-        this.graphqlService.insertHistoryItem(this.historyElement)
-            .subscribe(({ data }) => {
-                console.log('got data', data);
-            }, (error) => {
-                console.log('there was an error sending the query', error);
-            });
+        if (this.id) {
+            this.graphqlService.updateHistoryItem(this.id, historyElement)
+                .subscribe(({ data }) => {
+                    console.log('got data', data);
+                }, (error) => {
+                    console.log('there was an error sending the query', error);
+                });
+        } else {
+            this.graphqlService.insertHistoryItem(historyElement)
+                .subscribe(({ data }) => {
+                    console.log('got data', data);
+                }, (error) => {
+                    console.log('there was an error sending the query', error);
+                });
+        }
+
     }
 
 }
