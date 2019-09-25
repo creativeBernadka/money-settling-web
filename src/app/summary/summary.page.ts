@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {map} from 'rxjs/operators';
 import {ResultsModel} from '../../models/resultsModel';
 
@@ -13,7 +13,8 @@ export class SummaryPage implements OnInit {
     settlementArray: Array<ResultsModel> = [];
 
     constructor(
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -23,6 +24,10 @@ export class SummaryPage implements OnInit {
                 console.log(results.data);
                 this.settlementArray = results.data;
             });
+    }
+
+    goToHistory() {
+        this.router.navigateByUrl('/home');
     }
 
 }
