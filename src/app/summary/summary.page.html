@@ -1,52 +1,36 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>
-            Kto, komu, ile?
+            Podsumowanie
         </ion-title>
     </ion-toolbar>
 </ion-header>
 
-<ion-content id="main-div">
-
-    <ion-input placeholder="Podaj nazwę" [(ngModel)]="name"></ion-input>
+<ion-content>
 
     <ion-grid>
         <ion-row>
             <ion-col>
-                <ion-label>Ilość osób</ion-label>
+                Kto?
             </ion-col>
             <ion-col>
-                <ion-input placeholder="0" [(ngModel)]="numberOfPeople"></ion-input>
+                Komu?
             </ion-col>
             <ion-col>
-                <ion-button (click)="generateNickInputs()">Dodaj nicki</ion-button>
+                Ile jest winny?
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of settlementArray">
+            <ion-col *ngIf="item.howMany > 0">
+                {{item.whoBorrowed}}
+            </ion-col>
+            <ion-col *ngIf="item.howMany > 0">
+                {{item.fromWhomBorrowed}}
+            </ion-col>
+            <ion-col *ngIf="item.howMany > 0">
+                {{item.howMany}}
             </ion-col>
         </ion-row>
     </ion-grid>
-
-    <ion-list *ngIf="generateNickInput">
-        <ion-label>Podaj nicki:</ion-label>
-        <ion-input
-                *ngFor="let number of peopleArray"
-                placeholder="Nick {{number.nick}}"
-                [(ngModel)]="number.nick"
-        ></ion-input>
-    </ion-list>
-
-    <enter-value
-            *ngFor="let model of settlingModelArray"
-            [selectOptions]="peopleArray"
-            [settlingModel]="model"
-    ></enter-value>
-
-    <ion-fab>
-        <ion-fab-button (click)="addSettlingModel()">
-            <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button (click)="goToSummary()">
-            <ion-icon name="checkmark"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
-
 
 </ion-content>

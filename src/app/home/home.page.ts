@@ -46,7 +46,7 @@ export class HomePage implements OnInit {
 
     console.log('id', id);
 
-    this.router.navigateByUrl('/summary', navigationExtras);
+    this.router.navigateByUrl('/settlement', navigationExtras);
   }
 
 }
