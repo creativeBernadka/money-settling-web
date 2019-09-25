@@ -49,4 +49,8 @@ export class HomePage implements OnInit {
     this.router.navigateByUrl('/settlement', navigationExtras);
   }
 
+  newSettlement() {
+    this.router.navigateByUrl('/settlement');
+  }
+
 }
